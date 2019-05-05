@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-  Image,
+  Dimensions,
+  FlatList,
   Platform,
   ScrollView,
   StyleSheet,
@@ -8,181 +9,186 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { WebBrowser } from 'expo';
 
-import { MonoText } from '../components/StyledText';
+import { AppLoading, Icon } from 'expo';
+import Colors from '../constants/Colors';
+
+import Common from '../components/Common';
 
 export default class HomeScreen extends React.Component {
+
+  state = {
+    isLoadingComplete: false,
+    isLogin: false,
+  }
+
+  constructor(props) {
+    super(props);
+  }
+
   static navigationOptions = {
-    header: null,
+    title: '功能菜单',
   };
 
   render() {
+    if (!this.state.isLoadingComplete) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={this._handleLoadingError}
+          onFinish={this._handleFinishLoading}
+        />
+      );
+    }
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
+            <FlatList 
+              data={this.state.menu1}
+              keyExtractor={item => item.id + ''}
+              renderItem={({item}) => 
+                <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
+                  <Icon.Ionicons
+                    name={item.icon}
+                    size={50}
+                    // style={{ marginBottom: -3 }}
+                    color={item.iconColor}
+                  />
+                  <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
+                </TouchableOpacity>
               }
-              style={styles.welcomeImage}
             />
-          </View>
-
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
+            <FlatList 
+              data={this.state.menu2}
+              keyExtractor={item => item.id + ''}
+              renderItem={({item}) => 
+                <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
+                  <Icon.Ionicons
+                    name={item.icon}
+                    size={50}
+                    // style={{ marginBottom: -3 }}
+                    color={Colors.tabIconSelected}
+                  />
+                  <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
+                </TouchableOpacity>
+              }
+            />
           </View>
         </ScrollView>
 
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
       </View>
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
+  _goto = (route, params = {}) => {
+    if ( ! this.state.isLogin) {
+      Common.toSign(this);
+      return;
     }
+    Common.toRoute(this, route, params);
   }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
+  _loadResourcesAsync = () => {
+    this.setState(
+      {
+        menu1: [
+          {
+            id: 1,
+            icon: Platform.OS === 'ios' ? `ios-checkmark` : 'md-checkmark',
+            name: '成绩',
+            route: 'Score',
+            bgColor: '#B2EBF2',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+          {
+            id: 2,
+            icon: Platform.OS === 'ios' ? `ios-calendar` : 'md-calendar',
+            name: '课表',
+            route: 'Lesson',
+            bgColor: '#F0F4C3',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+        ],
+        menu2: [
+          {
+            id: 3,
+            icon: Platform.OS === 'ios' ? `ios-paper` : 'md-paper',
+            name: '考试',
+            route: 'Exam',
+            bgColor: '#FFECB3',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+          {
+            id: 4,
+            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
+            name: '编辑',
+            route: 'EditMenu',
+            bgColor: '#F5F5F5',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+        ],
+      }
+    );
+    Common.checkSign(this)
+    .then(
+      (rst) => {
+        this.state.isLogin = true;
+      }
+    )
+    .catch(
+      (error) => {
+        // Common.toSign(this);
+        this.state.isLogin = false;
+        throw error;
+      }
+    );
+  }
+
+  _handleLoadingError = error => {
+    console.warn(error);
   };
 
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
+  _handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
   };
 }
 
 const styles = StyleSheet.create({
+  element: {
+    width: Dimensions.get('window').width * 0.34,
+    height: Dimensions.get('window').width * 0.34 * 0.7,
+    marginBottom: Dimensions.get('window').width * 0.08,
+    marginLeft: Dimensions.get('window').width * 0.08 - 15,
+    marginRight: Dimensions.get('window').width * 0.08 - 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 }, 
+    shadowOpacity: 0.8, 
+    shadowRadius: 6, 
+    elevation: 10,
+    fontSize: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
   },
   contentContainer: {
     paddingTop: 30,
   },
   welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 30,
+    marginBottom: 30,
+    marginLeft: 30,
+    marginRight: 30,
   },
 });

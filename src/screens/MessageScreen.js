@@ -1,9 +1,9 @@
 import React from 'react';
 import { ExpoConfigView } from '@expo/samples';
 
-export default class SettingsScreen extends React.Component {
+export default class extends React.Component {
   static navigationOptions = {
-    title: 'app.json',
+    title: '消息',
   };
 
   render() {
