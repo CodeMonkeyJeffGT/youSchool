@@ -8,19 +8,25 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  BackHandler,
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 import Common from '../components/Common';
 import Ajax from '../components/Ajax';
 import Uri from '../constants/Uri';
 import CommonAlert from '../components/CommonAlert';
 import Store from '../components/Store'
-import Colors from '../constants/Colors';
 
-export default class extends React.Component {
+class Sign extends React.Component {
   static navigationOptions = {
     title: '登录',
   };
+
+  constructor(props) {
+    super(props);
+    BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+  }
 
   state = {
     showSchools: false,
@@ -62,6 +68,14 @@ export default class extends React.Component {
         </View>
       );
     }
+    let cancelButton = this.props.navigation.getParam('closable', false) ?
+    (<View style={styles.signElement}>
+      <TouchableOpacity
+        onPress={() => this.props.navigation.goBack(null)}
+      >
+        <Text style={styles.signButton}>取消</Text>
+      </TouchableOpacity>
+    </View>) : null;
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -98,18 +112,22 @@ export default class extends React.Component {
                 value={this.state.password}
                 onChangeText={(text) => this.setState({ password: text })}
               />
-              </View>
+            </View>
             <View style={styles.signElement}>
               <TouchableOpacity
-                onPress = {this.sign}
+                onPress={this.sign}
               >
                 <Text style={styles.signButton}>登录</Text>
               </TouchableOpacity>
             </View>
+            {cancelButton}
           </View>
         </ScrollView>
       </View>
     );
+  }
+  onBackButtonPressAndroid = () => {
+    return true;
   }
 
   chooseSchool = (item) => {
@@ -120,7 +138,15 @@ export default class extends React.Component {
 
   sign = () => {
     if (this.state.schoolId == 0) {
-      CommonAlert.alert('请选择学校');
+      CommonAlert.alert('提示：', '请选择学校');
+      return;
+    }
+    if (this.state.account == '') {
+      CommonAlert.alert('提示：', '请输入账号');
+      return;
+    }
+    if (this.state.password == '') {
+      CommonAlert.alert('提示：', '请输入密码');
       return;
     }
     Ajax.send(Uri.sign.method, Uri.sign.uri, {
@@ -131,17 +157,17 @@ export default class extends React.Component {
       others: this.state.others,
     })
     .then((rst) => {
-      console.log('登录成功');
+      CommonAlert.alert('好棒！', '登录成功');
       Store.set('signature', rst.data);
-      this.props.navigation.goBack();
       Common.goBack(this);
     })
     .catch((error) => {
-      console.log(error);
+      CommonAlert.error();
     });
   }
 }
 
+export default withNavigation(Sign);
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',

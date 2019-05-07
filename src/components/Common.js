@@ -8,7 +8,6 @@ const checkSign = () => {
       .then(
         (signature) => {
           if ( signature == null ) {
-              // CommonAlert.error('请登录');
               reject();
           }
           resolve();
@@ -16,7 +15,6 @@ const checkSign = () => {
       )
       .catch(
         (error) => {
-          console.log(error);
           reject();
         }
       );
@@ -33,7 +31,7 @@ const toRoute = (obj, route, params = {}) => {
 }
 
 const goBack = (obj) => {
-  obj.props.navigation.goBack();
+  obj.props.navigation.goBack(null);
 }
 
 export default {

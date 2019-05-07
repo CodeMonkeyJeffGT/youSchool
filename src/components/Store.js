@@ -8,7 +8,7 @@ const get = (key) => {
       try {
         value = AsyncStorage.getItem(key);
       } catch (error) {
-        console.log(error);
+        CommonAlert.error('数据读取失败，可能会产生未知影响');
         reject(error);
       }
       resolve(value);
@@ -17,15 +17,36 @@ const get = (key) => {
 }
 
 const set = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    console.log(error);
-    CommonAlert.error('存储失败，可能会产生未知影响');
-  }
+  return new Promise(
+    (resolve, reject) => {
+      let value;
+      try {
+        value = AsyncStorage.setItem(key, value);
+      } catch (error) {
+        CommonAlert.error('数据存储失败，可能会产生未知影响');
+        reject(error);
+      }
+      resolve(value);
+    }
+  );
+}
+
+const unset = async (key) => {
+  return new Promise(
+    (resolve, reject) => {
+      try {
+        AsyncStorage.removeItem(key);
+      } catch (error) {
+        CommonAlert.error('数据删除失败，可能会产生未知影响');
+        reject(error);
+      }
+      resolve();
+    }
+  );
 }
 
 export default {
     get,
     set,
+    unset,
 }

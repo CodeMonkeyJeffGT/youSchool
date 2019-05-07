@@ -17,19 +17,16 @@ import Store from './Store'
 //返回拦截器
 axios.interceptors.response.use(
   function(response) {
-    console.log(response.data);
+    let code = response.data.code;
+    let message = response.data.message;
     if (response.data.code == 1) {
       Store.set('signature', null);
-      CommonAlert.error('请登录');
+      CommonAlert.wrong(code, message);
       this.props.navigation.navigate('Sign');
-      console.log('请登录');
-      return Promise.reject('请登录');
+      return Promise.reject(message);
     }
     if (response.data.code != 0) {
-      let code = response.data.code;
-      let message = response.data.message;
       CommonAlert.wrong(code, message);
-      console.log(message);
       return Promise.reject(message);
     } else {
       return Promise.resolve(response.data);

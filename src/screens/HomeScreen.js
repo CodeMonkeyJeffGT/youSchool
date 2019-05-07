@@ -14,6 +14,7 @@ import { AppLoading, Icon } from 'expo';
 import Colors from '../constants/Colors';
 
 import Common from '../components/Common';
+import Store from '../components/Store'
 
 export default class HomeScreen extends React.Component {
 
@@ -91,7 +92,7 @@ export default class HomeScreen extends React.Component {
       .then(
         (rst) => {
           this.setState({ isLogin : true });
-          Common.toRoute(this, route, params);
+          this.gotoReal(route, params);
         }
       )
       .catch(
@@ -101,9 +102,27 @@ export default class HomeScreen extends React.Component {
           throw error;
         }
       );
-    } else {
-      Common.toRoute(this, route, params);
     }
+    this.gotoReal(route, params);
+  }
+  
+  gotoReal = (route, params = {}) => {
+    if (route == 'Sign') {
+      params = { closable: true }
+    } else if (route === 'SignOut') {
+      this.signOutUser();
+      return;
+    }
+    Common.toRoute(this, route, params);
+  }
+
+  signOutUser = () => {
+    Store.unset('signature')
+    .then(
+      () => {
+        this.setState({ isLoadingComplete: true });
+      }
+    )
   }
 
   _loadResourcesAsync = () => {
@@ -130,10 +149,10 @@ export default class HomeScreen extends React.Component {
           },
           {
             id: 5,
-            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
-            name: '编辑',
-            route: 'EditMenu',
-            bgColor: '#F5F5F5',
+            icon: Platform.OS === 'ios' ? `ios-person` : 'md-person',
+            name: '切换账号',
+            route: 'Sign',
+            bgColor: '#E1BEE7',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
@@ -150,10 +169,19 @@ export default class HomeScreen extends React.Component {
           },
           {
             id: 4,
-            icon: Platform.OS === 'ios' ? `ios-person` : 'md-person',
-            name: '注销',
-            route: 'Sign',
-            bgColor: '#E1BEE7',
+            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
+            name: '编辑',
+            route: 'EditMenu',
+            bgColor: '#F5F5F5',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+          {
+            id: 6,
+            icon: Platform.OS === 'ios' ? `ios-close` : 'md-close',
+            name: '退出登录',
+            route: 'SignOut',
+            bgColor: '#FFCDD2',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
@@ -182,6 +210,7 @@ export default class HomeScreen extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
+
 }
 
 const styles = StyleSheet.create({
