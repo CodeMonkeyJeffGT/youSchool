@@ -29,13 +29,15 @@ export default class HomeScreen extends React.Component {
 
   static navigationOptions = {
     title: '功能菜单',
-    headerTitleStyle: {
-      flex:1,
-      textAlign: 'center',
-    },
   };
 
   render() {
+    Store.get('signature')
+    .then(
+      (rst) => {
+        console.log(rst);
+      }
+    )
     if (!this.state.isLoadingComplete) {
       return (
         <AppLoading
@@ -57,7 +59,6 @@ export default class HomeScreen extends React.Component {
                   <Icon.Ionicons
                     name={item.icon}
                     size={50}
-                    // style={{ marginBottom: -3 }}
                     color={item.iconColor}
                   />
                   <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
@@ -72,7 +73,6 @@ export default class HomeScreen extends React.Component {
                   <Icon.Ionicons
                     name={item.icon}
                     size={50}
-                    // style={{ marginBottom: -3 }}
                     color={Colors.tabIconSelected}
                   />
                   <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
@@ -112,6 +112,8 @@ export default class HomeScreen extends React.Component {
     } else if (route === 'SignOut') {
       this.signOutUser();
       return;
+    } else if (route === 'refresh') {
+      this.setState({ isLoadingComplete: false });
     }
     Common.toRoute(this, route, params);
   }
@@ -120,7 +122,7 @@ export default class HomeScreen extends React.Component {
     Store.unset('signature')
     .then(
       () => {
-        this.setState({ isLoadingComplete: true });
+        this.setState({ isLoadingComplete: false });
       }
     )
   }
@@ -153,6 +155,15 @@ export default class HomeScreen extends React.Component {
             name: '切换账号',
             route: 'Sign',
             bgColor: '#E1BEE7',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
+          {
+            id: 7,
+            icon: Platform.OS === 'ios' ? `ios-refresh` : 'md-refresh',
+            name: '刷新',
+            route: 'refresh',
+            bgColor: '#BBDEFB',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },

@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.43.189';
+const baseUrl = 'http://you.nefuer.net';
 
 export default {
   sign: {

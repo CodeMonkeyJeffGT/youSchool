@@ -1,4 +1,3 @@
-import CommonAlert from './CommonAlert'
 import Store from './Store'
 
 const checkSign = () => {

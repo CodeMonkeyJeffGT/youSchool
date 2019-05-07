@@ -39,7 +39,7 @@ axios.interceptors.response.use(
   }
 )
 
-const baseUrl = 'http://192.168.43.189/';
+const baseUrl = 'http://you.nefuer.net/';
 const defaultData = {};
 const defatltUri = '/';
 const send = (method = 'GET', uri = defatltUri, data = defaultData) => {

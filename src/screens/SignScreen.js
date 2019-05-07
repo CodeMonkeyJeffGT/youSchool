@@ -10,7 +10,6 @@ import {
   Dimensions,
   BackHandler,
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
 
 import Common from '../components/Common';
 import Ajax from '../components/Ajax';
@@ -18,7 +17,7 @@ import Uri from '../constants/Uri';
 import CommonAlert from '../components/CommonAlert';
 import Store from '../components/Store'
 
-class Sign extends React.Component {
+export default class extends React.Component {
   static navigationOptions = {
     title: '登录',
   };
@@ -28,7 +27,12 @@ class Sign extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
   }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid);
+  }
+
   state = {
+    posting: false,
     showSchools: false,
     schoolId: 0,
     schoolName: '请选择学校',
@@ -137,6 +141,9 @@ class Sign extends React.Component {
   }
 
   sign = () => {
+    if (this.state.posting) {
+      return;
+    }
     if (this.state.schoolId == 0) {
       CommonAlert.alert('提示：', '请选择学校');
       return;
@@ -149,6 +156,7 @@ class Sign extends React.Component {
       CommonAlert.alert('提示：', '请输入密码');
       return;
     }
+    this.setState({ posting: true });
     Ajax.send(Uri.sign.method, Uri.sign.uri, {
       schoolId: this.state.schoolId,
       account: this.state.account,
@@ -158,16 +166,21 @@ class Sign extends React.Component {
     })
     .then((rst) => {
       CommonAlert.alert('好棒！', '登录成功');
-      Store.set('signature', rst.data);
-      Common.goBack(this);
+      Store.set('signature', rst.data)
+      .then(
+        () => {
+          this.setState({ posting: false });
+          Common.goBack(this);
+        }
+      )
     })
     .catch((error) => {
-      CommonAlert.error();
+      CommonAlert.alert('登录失败', '请检查账号密码（使用教务系统账号密码）');
+      this.setState({ posting: false });
     });
   }
 }
 
-export default withNavigation(Sign);
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',

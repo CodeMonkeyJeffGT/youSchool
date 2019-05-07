@@ -19,14 +19,13 @@ const get = (key) => {
 const set = async (key, value) => {
   return new Promise(
     (resolve, reject) => {
-      let value;
       try {
-        value = AsyncStorage.setItem(key, value);
+        AsyncStorage.setItem(key, value);
       } catch (error) {
         CommonAlert.error('数据存储失败，可能会产生未知影响');
         reject(error);
       }
-      resolve(value);
+      resolve();
     }
   );
 }

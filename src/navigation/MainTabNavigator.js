@@ -5,6 +5,9 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/HomeScreen';
+import ScoreScreen from '../screens/ScoreScreen';
+import LessonScreen from '../screens/LessonScreen';
+import ExamScreen from '../screens/ExamScreen';
 
 import ForumScreen from '../screens/ForumScreen';
 import ColumnsScreen from '../screens/ColumnsScreen';
@@ -22,10 +25,13 @@ import MyPagesScreen from '../screens/MyPagesScreen';
 
 import IconsScreen from '../screens/IconsScreen';
 
-import Sign from '../screens/Sign';
+import SignScreen from '../screens/SignScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Score: ScoreScreen,
+  Lesson: LessonScreen,
+  Exam: ExamScreen,
 });
 
 const ForumStack = createStackNavigator({
@@ -54,7 +60,7 @@ const IconsStack = createStackNavigator({
 
 const ModalStack = createStackNavigator(
   {
-    Sign: Sign,
+    Sign: SignScreen,
   },
   {
     defaultNavigationOptions: {

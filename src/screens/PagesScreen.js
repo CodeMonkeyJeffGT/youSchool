@@ -4,10 +4,6 @@ import { ExpoConfigView } from '@expo/samples';
 export default class extends React.Component {
   static navigationOptions = {
     title: '我',
-    headerTitleStyle: {
-      flex:1,
-      textAlign: 'center',
-    },
   };
 
   render() {
