@@ -32,8 +32,10 @@ export default class extends React.Component {
   }
 
   state = {
+    firstEdit: true,
+    accAutoFocus: false,
     posting: false,
-    showSchools: false,
+    showSchools: true,
     schoolId: 0,
     schoolName: '请选择学校',
     account: '',
@@ -53,11 +55,22 @@ export default class extends React.Component {
   }
 
   render() {
+    if (this.props.navigation.getParam('closable', false) && this.state.firstEdit) {
+      this.setState({ showSchools: false, firstEdit: false });
+    }
     if (this.state.showSchools) {
       return (
         <View style={styles.container}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={styles.welcomeContainer}>
+              <Text sytle={styles.signLabel}>
+                选择学校：
+              </Text>
+              <TouchableOpacity
+                onPress={() => this.setState({ showSchools: false })}
+              >
+                <Text style={styles.cancelSchool}>取消</Text>
+              </TouchableOpacity>
               <FlatList 
                 data={this.state.schoolsList}
                 keyExtractor={item => item.id + ''}
@@ -80,6 +93,11 @@ export default class extends React.Component {
         <Text style={styles.signButton}>取消</Text>
       </TouchableOpacity>
     </View>) : null;
+    let accAutoFocus = false;
+    if (this.state.accAutoFocus) {
+      this.setState({ accAutoFocus: false });
+      accAutoFocus = true;
+    }
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -101,9 +119,12 @@ export default class extends React.Component {
                 账号
               </Text>
               <TextInput
+                ref='account'
+                autoFocus={accAutoFocus}
                 style={styles.signInput} 
                 value={this.state.account}
                 onChangeText={(text) => this.setState({ account: text })}
+                onSubmitEditing={() => this.refs.password.focus()}
               />
             </View>
             <View style={styles.signElement}>
@@ -111,10 +132,12 @@ export default class extends React.Component {
                 密码
               </Text>
               <TextInput
+                ref='password'
                 secureTextEntry={true}
                 style={styles.signInput} 
                 value={this.state.password}
                 onChangeText={(text) => this.setState({ password: text })}
+                onSubmitEditing={this.sign}
               />
             </View>
             <View style={styles.signElement}>
@@ -135,9 +158,13 @@ export default class extends React.Component {
   }
 
   chooseSchool = (item) => {
-    this.setState({ schoolId: item.id });
-    this.setState({ schoolName: item.name });
-    this.setState({ showSchools: false });
+    let accAutoFocus = this.state.schoolId == 0;
+    this.setState({
+      schoolId: item.id,
+      schoolName: item.name,
+      showSchools: false,
+      accAutoFocus: accAutoFocus,
+    });
   }
 
   sign = () => {
@@ -157,7 +184,7 @@ export default class extends React.Component {
       return;
     }
     this.setState({ posting: true });
-    Ajax.send(Uri.sign.method, Uri.sign.uri, {
+    Ajax.send(Uri.userAuth.method, Uri.userAuth.uri, {
       schoolId: this.state.schoolId,
       account: this.state.account,
       password: this.state.password,
@@ -198,7 +225,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 3,
     textAlign: 'center',
-    width: Dimensions.get('window').width- 60,
+    width: Dimensions.get('window').width- 120,
+    borderColor: 'gray',
+    borderBottomWidth: 1,
+    padding: 5,
+    marginLeft: 30
   },
   signElement: {
     width: Dimensions.get('window').width- 60,
@@ -222,4 +253,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 3,
   },
+  cancelSchool: {
+    marginTop: 2,
+    marginBottom: 3,
+    fontSize: 25,
+    padding: 5,
+    textAlign: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    padding: 3,
+  }
 });
