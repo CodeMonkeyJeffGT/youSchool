@@ -1,10 +1,10 @@
 import CommonAlert from './CommonAlert'
 import Store from './Store'
 
-const checkSign = (obj) => {
+const checkSign = () => {
   return new Promise(
     (resolve, reject) => {
-      Store.get('signature', '')
+      Store.get('signature')
       .then(
         (signature) => {
           if ( signature == null ) {
@@ -13,7 +13,8 @@ const checkSign = (obj) => {
           }
           resolve();
         }
-      ).catch(
+      )
+      .catch(
         (error) => {
           console.log(error);
           reject();
@@ -31,8 +32,13 @@ const toRoute = (obj, route, params = {}) => {
   obj.props.navigation.navigate(route, params);
 }
 
+const goBack = (obj) => {
+  obj.props.navigation.goBack();
+}
+
 export default {
     checkSign,
     toSign,
     toRoute,
+    goBack,
 }

@@ -28,6 +28,10 @@ export default class HomeScreen extends React.Component {
 
   static navigationOptions = {
     title: '功能菜单',
+    headerTitleStyle: {
+      flex:1,
+      textAlign: 'center',
+    },
   };
 
   render() {
@@ -83,10 +87,23 @@ export default class HomeScreen extends React.Component {
 
   _goto = (route, params = {}) => {
     if ( ! this.state.isLogin) {
-      Common.toSign(this);
-      return;
+      Common.checkSign()
+      .then(
+        (rst) => {
+          this.setState({ isLogin : true });
+          Common.toRoute(this, route, params);
+        }
+      )
+      .catch(
+        (error) => {
+          Common.toSign(this);
+          this.setState({ isLogin : false });
+          throw error;
+        }
+      );
+    } else {
+      Common.toRoute(this, route, params);
     }
-    Common.toRoute(this, route, params);
   }
 
   _loadResourcesAsync = () => {
@@ -111,6 +128,15 @@ export default class HomeScreen extends React.Component {
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
+          {
+            id: 5,
+            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
+            name: '编辑',
+            route: 'EditMenu',
+            bgColor: '#F5F5F5',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
         ],
         menu2: [
           {
@@ -124,26 +150,26 @@ export default class HomeScreen extends React.Component {
           },
           {
             id: 4,
-            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
-            name: '编辑',
-            route: 'EditMenu',
-            bgColor: '#F5F5F5',
+            icon: Platform.OS === 'ios' ? `ios-person` : 'md-person',
+            name: '注销',
+            route: 'Sign',
+            bgColor: '#E1BEE7',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
         ],
       }
     );
-    Common.checkSign(this)
+    Common.checkSign()
     .then(
       (rst) => {
-        this.state.isLogin = true;
+        this.setState({ isLogin : true });
       }
     )
     .catch(
       (error) => {
-        // Common.toSign(this);
-        this.state.isLogin = false;
+        Common.toSign(this);
+        this.setState({ isLogin : false });
         throw error;
       }
     );

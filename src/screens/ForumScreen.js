@@ -5,6 +5,10 @@ import { ExpoLinksView } from '@expo/samples';
 export default class extends React.Component {
   static navigationOptions = {
     title: '论坛',
+    headerTitleStyle: {
+      flex:1,
+      textAlign: 'center',
+    },
   };
 
   render() {

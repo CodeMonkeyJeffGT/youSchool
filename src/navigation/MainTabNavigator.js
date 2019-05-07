@@ -58,7 +58,6 @@ const ModalStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      gesturesEnabled: false,
     },
   },
 );

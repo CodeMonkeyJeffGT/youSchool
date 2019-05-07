@@ -8,11 +8,15 @@ const success = () => {
 
 }
 
-const wrong = () => {
-
+const wrong = (code, msg) => {
+  Alert.alert('提示(' + code + '):', msg);
 }
 
 const error = (msg = '发生未知错误') => {
+  Alert.alert('系统发生错误', msg);
+}
+
+const alert = (msg) => {
   Alert.alert('提示', msg);
 }
 
@@ -21,4 +25,5 @@ export default {
   success,
   wrong,
   error,
+  alert,
 }

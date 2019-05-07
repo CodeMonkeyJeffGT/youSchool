@@ -25,6 +25,10 @@ export default class IconsScreen extends React.Component {
 
   static navigationOptions = {
     title: '功能菜单',
+    headerTitleStyle: {
+      flex:1,
+      textAlign: 'center',
+    },
   };
 
   render() {
