@@ -35,7 +35,7 @@ export default class extends React.Component {
     firstEdit: true,
     accAutoFocus: false,
     posting: false,
-    showSchools: true,
+    showSchools: false,
     schoolId: 0,
     schoolName: '请选择学校',
     account: '',
@@ -63,7 +63,7 @@ export default class extends React.Component {
         <View style={styles.container}>
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={styles.welcomeContainer}>
-              <Text sytle={styles.signLabel}>
+              <Text sytle={styles.applyLabel}>
                 选择学校：
               </Text>
               <TouchableOpacity
@@ -125,6 +125,7 @@ export default class extends React.Component {
                 value={this.state.account}
                 onChangeText={(text) => this.setState({ account: text })}
                 onSubmitEditing={() => this.refs.password.focus()}
+                returnKeyType='next'
               />
             </View>
             <View style={styles.signElement}>
@@ -138,6 +139,7 @@ export default class extends React.Component {
                 value={this.state.password}
                 onChangeText={(text) => this.setState({ password: text })}
                 onSubmitEditing={this.sign}
+                returnKeyType='send'
               />
             </View>
             <View style={styles.signElement}>
@@ -193,7 +195,7 @@ export default class extends React.Component {
     })
     .then((rst) => {
       CommonAlert.alert('好棒！', '登录成功');
-      Store.set('signature', rst.data)
+      Store.set('signature', rst)
       .then(
         () => {
           this.setState({ posting: false });

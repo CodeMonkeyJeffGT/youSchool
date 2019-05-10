@@ -9,6 +9,10 @@ export default {
     uri: baseUrl + '/api/v1/schools/{id}',
     method: 'GET',
   },
+  searchUsers: {
+    uri: baseUrl + '/api/v1/searchUsers',
+    method: 'GET',
+  },
   userAuth: {
     uri: baseUrl + '/api/v1/userAuth',
     method: 'POST',
@@ -26,7 +30,7 @@ export default {
     method: 'GET',
   },
   userFollowList: {
-    uri: baseUrl + '/api/v1/userFollows/',
+    uri: baseUrl + '/api/v1/userFollows',
     method: 'GET',
   },
   userFollow: {
@@ -46,7 +50,7 @@ export default {
     method: 'GET',
   },
   columnList: {
-    uri: baseUrl + '/api/v1/columns/',
+    uri: baseUrl + '/api/v1/columns',
     method: 'GET',
   },
   columnInfo: {
@@ -54,7 +58,7 @@ export default {
     method: 'GET',
   },
   columnApply: {
-    uri: baseUrl + '/api/v1/columns/',
+    uri: baseUrl + '/api/v1/columns',
     method: 'POST',
   },
   columnInfoUpdate: {
@@ -82,11 +86,11 @@ export default {
     method: 'GET',
   },
   pageList: {
-    uri: baseUrl + '/api/v1/pages/',
+    uri: baseUrl + '/api/v1/pages',
     method: 'GET',
   },
   pagePublish: {
-    uri: baseUrl + '/api/v1/pages/',
+    uri: baseUrl + '/api/v1/pages',
     method: 'POST',
   },
   pageDelete: {
@@ -94,23 +98,23 @@ export default {
     method: 'DELETE',
   },
   pageLikeNumber: {
-    uri: baseUrl + '/api/v1/pages/{pid}/likes/',
+    uri: baseUrl + '/api/v1/pages/{pid}/likes',
     method: 'GET',
   },
   pageLike: {
-    uri: baseUrl + '/api/v1/pages/{pid}/likes/',
+    uri: baseUrl + '/api/v1/pages/{pid}/likes',
     method: 'POST',
   },
   pageUnlike: {
-    uri: baseUrl + '/api/v1/pages/{pid}/likes/',
+    uri: baseUrl + '/api/v1/pages/{pid}/likes',
     method: 'DELETE',
   },
   pageCommentList: {
-    uri: baseUrl + '/api/v1/pages/{pid}/comments/',
+    uri: baseUrl + '/api/v1/pages/{pid}/comments',
     method: 'GET',
   },
   pageComment: {
-    uri: baseUrl + '/api/v1/pages/{pid}/comments/',
+    uri: baseUrl + '/api/v1/pages/{pid}/comments',
     method: 'POST',
   },
   pageCommentDelete: {
@@ -118,59 +122,59 @@ export default {
     method: 'DELETE',
   },
   pageCommentLikeNumber: {
-    uri: baseUrl + '/api/v1/comments/{cid}/likes/',
+    uri: baseUrl + '/api/v1/comments/{cid}/likes',
     method: 'GET',
   },
   pageCommentLike: {
-    uri: baseUrl + '/api/v1/comments/{cid}/likes/',
+    uri: baseUrl + '/api/v1/comments/{cid}/likes',
     method: 'POST',
   },
   pageCommentUnlike: {
-    uri: baseUrl + '/api/v1/comments/{cid}/likes/',
+    uri: baseUrl + '/api/v1/comments/{cid}/likes',
     method: 'DELETE',
   },
   pageCollectList: {
-    uri: baseUrl + '/api/v1/collectsPage/',
+    uri: baseUrl + '/api/v1/collectsPage',
     method: 'GET',
   },
   pageCollect: {
-    uri: baseUrl + '/api/v1/pages/{pid}/collect/',
+    uri: baseUrl + '/api/v1/pages/{pid}/collect',
     method: 'POST',
   },
   pageUncollect: {
-    uri: baseUrl + '/api/v1/pages/{pid}/collect/',
+    uri: baseUrl + '/api/v1/pages/{pid}/collect',
     method: 'DELETE',
   },
   messageList: {
-    uri: baseUrl + '/api/v1/messages/',
+    uri: baseUrl + '/api/v1/messages',
     method: 'GET',
   },
   messageSend: {
-    uri: baseUrl + '/api/v1/messages/',
+    uri: baseUrl + '/api/v1/messages',
     method: 'POST',
   },
   menu: {
-    uri: baseUrl + 'api/v1/menus/',
+    uri: baseUrl + 'api/v1/menus',
     method: 'GET',
   },
   menuUpdate: {
-    uri: baseUrl + '/api/v1/menus/',
+    uri: baseUrl + '/api/v1/menus',
     method: 'PUT',
   },
   score: {
-    uri: baseUrl + '/api/v1/scores/',
+    uri: baseUrl + '/api/v1/scores',
     methods: 'GET',
   },
   lesson: {
-    uri: baseUrl + '/api/v1/lessons/',
+    uri: baseUrl + '/api/v1/lessons',
     methods: 'GET',
   },
   exam: {
-    uri: baseUrl + '/api/v1/exams/',
+    uri: baseUrl + '/api/v1/exams',
     methods: 'GET',
   },
   cet: {
-    uri: baseUrl + '/api/v1/cets/',
+    uri: baseUrl + '/api/v1/cets',
     methods: 'GET',
   },
 };

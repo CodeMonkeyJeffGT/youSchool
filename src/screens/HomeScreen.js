@@ -32,12 +32,6 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-    Store.get('signature')
-    .then(
-      (rst) => {
-        console.log(rst);
-      }
-    )
     if (!this.state.isLoadingComplete) {
       return (
         <AppLoading
@@ -107,14 +101,6 @@ export default class HomeScreen extends React.Component {
   }
   
   gotoReal = (route, params = {}) => {
-    if (route == 'Sign') {
-      params = { closable: true }
-    } else if (route === 'SignOut') {
-      this.signOutUser();
-      return;
-    } else if (route === 'refresh') {
-      this.setState({ isLoadingComplete: false });
-    }
     Common.toRoute(this, route, params);
   }
 
@@ -149,24 +135,6 @@ export default class HomeScreen extends React.Component {
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
-          {
-            id: 5,
-            icon: Platform.OS === 'ios' ? `ios-person` : 'md-person',
-            name: '切换账号',
-            route: 'Sign',
-            bgColor: '#E1BEE7',
-            iconColor: Colors.tabIconSelected,
-            color: Colors.tabIconSelected,
-          },
-          {
-            id: 7,
-            icon: Platform.OS === 'ios' ? `ios-refresh` : 'md-refresh',
-            name: '刷新',
-            route: 'refresh',
-            bgColor: '#BBDEFB',
-            iconColor: Colors.tabIconSelected,
-            color: Colors.tabIconSelected,
-          },
         ],
         menu2: [
           {
@@ -184,15 +152,6 @@ export default class HomeScreen extends React.Component {
             name: '编辑',
             route: 'EditMenu',
             bgColor: '#F5F5F5',
-            iconColor: Colors.tabIconSelected,
-            color: Colors.tabIconSelected,
-          },
-          {
-            id: 6,
-            icon: Platform.OS === 'ios' ? `ios-close` : 'md-close',
-            name: '退出登录',
-            route: 'SignOut',
-            bgColor: '#FFCDD2',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },

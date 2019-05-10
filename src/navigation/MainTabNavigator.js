@@ -22,6 +22,7 @@ import CollectsScreen from '../screens/CollectsScreen';
 import FollowsScreen from '../screens/FollowsScreen';
 import FollowedScreen from '../screens/FollowedScreen';
 import MyPagesScreen from '../screens/MyPagesScreen';
+import FollowColumnsScreen from '../screens/FollowColumnsScreen';
 
 import IconsScreen from '../screens/IconsScreen';
 
@@ -38,6 +39,7 @@ const ForumStack = createStackNavigator({
   Forum: ForumScreen,
   Columns: ColumnsScreen,
   Pages: PagesScreen,
+  Detail: DetailScreen,
 });
 
 const MessageStack = createStackNavigator({
@@ -47,10 +49,10 @@ const MessageStack = createStackNavigator({
 
 const MesStack = createStackNavigator({
   Me: MeScreen,
-  Detail: DetailScreen,
   Collects: CollectsScreen,
   Follows: FollowsScreen,
   Followed: FollowedScreen,
+  FollowColumns: FollowColumnsScreen,
   MyPages: MyPagesScreen,
 });
 

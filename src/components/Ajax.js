@@ -29,7 +29,7 @@ axios.interceptors.response.use(
       CommonAlert.wrong(code, message);
       return Promise.reject(message);
     } else {
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.data);
     }
   },
   function(error) {
@@ -43,6 +43,10 @@ const baseUrl = 'http://you.nefuer.net/';
 const defaultData = {};
 const defatltUri = '/';
 const send = (method = 'GET', uri = defatltUri, data = defaultData) => {
+  if (method == 'GET') {
+    uri = urlEncode(uri, data);
+    console.log(uri);
+  }
   return new Promise(
     (resolve, reject) => {
       Store.get('signature')
@@ -72,6 +76,27 @@ const send = (method = 'GET', uri = defatltUri, data = defaultData) => {
     }
   );
 };
+
+const urlEncode = (url, params) => {
+  let encode = urlEncodeStep(params).slice(1);
+  return encode == '' ? url : url + '?' + encode;
+}
+
+const urlEncodeStep = (param, key = '', encode = null) => {
+  if (param==null) return '';
+  var paramStr = '';
+  var t = typeof (param);
+  if (t == 'string' || t == 'number' || t == 'boolean') {
+      paramStr += '&' + key + '='  + ((encode==null||encode) ? encodeURIComponent(param) : param); 
+  } else {
+      for (var i in param) {
+          var k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : i)
+          paramStr += urlEncodeStep(param[i], k, encode)
+      }
+  }
+  return paramStr;
+}
+
 
 export default {
   send,
