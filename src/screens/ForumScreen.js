@@ -129,7 +129,7 @@ export default class ForumScreen extends React.Component {
                   keyExtractor={item => item.id + ''}
                   renderItem={({item}) => 
                     <TouchableOpacity onPress={this.columnDetail.bind(this, item.id)} style={styles.columnElement}>
-                      <Text style={styles.columnName}>{item.name}</Text>
+                      <Text style={styles.columnName}>{item.name} {item.type}</Text>
                       <Text style={styles.columnDesc}>{item.description}</Text>
                       <Text style={styles.columnLike}>关注：{item.followNum}人</Text>
                     </TouchableOpacity>
@@ -146,17 +146,41 @@ export default class ForumScreen extends React.Component {
               <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
                 <View style={styles.welcomeContainer}>
                   <FlatList 
-                    data={this.state.menu1}
+                    data={this.state.pages}
                     keyExtractor={item => item.id + ''}
                     renderItem={({item}) => 
-                      <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
-                        <Icon.Ionicons
-                          name={item.icon}
-                          size={50}
-                          color={item.iconColor}
-                        />
-                        <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
-                      </TouchableOpacity>
+                      <View>
+                        <View style={styles.userPageContainer}>
+                          <View style={styles.userIconContainer}>
+                            <Image
+                              source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
+                              style={{ width: 64, height: 64, borderRadius: 50, }}
+                              resizeMode="cover"
+                            />
+                          </View>
+                          <View style={styles.titleTextContainer}>
+                            <Text style={styles.nameText} numberOfLines={1}>
+                              {item.user.nickname}
+                            </Text>
+                            <Text style={styles.slugText} numberOfLines={1}>
+                              {item.user.school.name}
+                            </Text>
+                            <Text style={styles.descriptionText}>
+                              {item.column.name} {item.column.type}
+                            </Text>
+                          </View>
+                        </View>
+                        <View style={styles.pageContainer}>
+                          <View style={styles.titleTextContainer}>
+                            <Text style={styles.nameText} numberOfLines={1}>
+                              {item.name}
+                            </Text>
+                            <Text style={styles.contentText} numberOfLines={1}>
+                              {item.content}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
                     }
                   />
                 </View>
@@ -208,17 +232,41 @@ export default class ForumScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
             <FlatList 
-              data={this.state.menu1}
+              data={this.state.lists}
               keyExtractor={item => item.id + ''}
               renderItem={({item}) => 
-                <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
-                  <Icon.Ionicons
-                    name={item.icon}
-                    size={50}
-                    color={item.iconColor}
-                  />
-                  <Text style={{color: item.color, textAlign: 'center'}}>{item.name}</Text>
-                </TouchableOpacity>
+                <View>
+                  <View style={styles.userPageContainer}>
+                    <View style={styles.userIconContainer}>
+                      <Image
+                        source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
+                        style={{ width: 64, height: 64, borderRadius: 50, }}
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <View style={styles.titleTextContainer}>
+                      <Text style={styles.nameText} numberOfLines={1}>
+                        {item.user.nickname}
+                      </Text>
+                      <Text style={styles.slugText} numberOfLines={1}>
+                        {item.user.school.name}
+                      </Text>
+                      <Text style={styles.descriptionText}>
+                        {item.column.name} {item.column.type}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.pageContainer}>
+                    <View style={styles.titleTextContainer}>
+                      <Text style={styles.nameText} numberOfLines={1}>
+                        {item.name}
+                      </Text>
+                      <Text style={styles.contentText} numberOfLines={1}>
+                        {item.content}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
               }
             />
           </View>
@@ -253,16 +301,20 @@ export default class ForumScreen extends React.Component {
     if (this.state.showSearchRstType == null) {
       this.setState({showSearchRstType: 'pages'});
     }
-    this.searchPage();
+    this.searchPage(false);
     this.searchColumn();
     this.searchUser();
   }
 
-  searchPage()
+  searchPage(home = true)
   {
-    let lastId = this.state.searchQuery == '' ? this.state.listsLastId : 0;
+    let lastId = home ? this.state.listsLastId : 0;
     this.sendAjax('pageList', [], {query: this.state.searchQuery, lastId: 0}, (rst) => {
-      if (this.state.searchQuery == '') {
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].column.type = types[rst[key].column.type];
+      }
+      if (home) {
         this.setState({lists: rst});
         if (rst.length != 0) {
           this.setState({listsLastId: rst[rst.length - 1].id});
@@ -274,6 +326,7 @@ export default class ForumScreen extends React.Component {
         }
       }
     }, (error) => {
+      console.log(error);
       CommonAlert.alert('错误', '获取帖子列表失败');
     })
   }
@@ -281,6 +334,10 @@ export default class ForumScreen extends React.Component {
   searchColumn()
   {
     this.sendAjax('columnList', [], {query: this.state.searchQuery, lastId: 0}, (rst) => {
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].type = types[rst[key].type];
+      }
       this.setState({columns: rst});
       if (rst.length != 0) {
         this.setState({columnsLastId: rst[rst.length - 1].id});
@@ -630,6 +687,20 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dividerColor,
     marginBottom: 5,
   },
+  userPageContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 8,
+    paddingBottom: 8,
+    flexDirection: 'row',
+    backgroundColor: Colors.dividerColor,
+  },
+  pageContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 8,
+    flexDirection: 'row',
+    backgroundColor: Colors.dividerColor,
+    marginBottom: 5,
+  },
   userIconContainer: {
     marginRight: 15,
     paddingTop: 2,
@@ -644,6 +715,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   descriptionText: {
+    fontSize: 14,
+    marginTop: 6,
+    color: '#4d4d4d',
+  },
+  contentText: {
     fontSize: 14,
     marginTop: 6,
     color: '#4d4d4d',

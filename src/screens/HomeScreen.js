@@ -135,6 +135,15 @@ export default class HomeScreen extends React.Component {
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
+          {
+            id: 2,
+            icon: Platform.OS === 'ios' ? `ios-cart` : 'md-cart',
+            name: '二手交易',
+            route: 'Exchange',
+            bgColor: '#C8E6C9',
+            iconColor: Colors.tabIconSelected,
+            color: Colors.tabIconSelected,
+          },
         ],
         menu2: [
           {
@@ -148,13 +157,22 @@ export default class HomeScreen extends React.Component {
           },
           {
             id: 4,
-            icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
-            name: '编辑',
-            route: 'EditMenu',
-            bgColor: '#F5F5F5',
+            icon: Platform.OS === 'ios' ? `ios-clipboard` : 'md-clipboard',
+            name: '失物招领',
+            route: 'Lost',
+            bgColor: '#FFCDD2',
             iconColor: Colors.tabIconSelected,
             color: Colors.tabIconSelected,
           },
+          // {
+          //   id: 6,
+          //   icon: Platform.OS === 'ios' ? `ios-create` : 'md-create',
+          //   name: '编辑',
+          //   route: 'EditMenu',
+          //   bgColor: '#F5F5F5',
+          //   iconColor: Colors.tabIconSelected,
+          //   color: Colors.tabIconSelected,
+          // },
         ],
       }
     );
