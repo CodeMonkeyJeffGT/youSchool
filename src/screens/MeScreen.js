@@ -124,7 +124,7 @@ export default class ForumScreen extends React.Component {
             <View style={{marginTop: 20}}>
               <FlatList 
                 data={this.state.buttons}
-                keyExtractor={item => item.id + ''}
+                keyExtractor={item => 'meControl' + item.id + ''}
                 renderItem={({item}) => 
                   <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={styles.element}>
                     <View style={styles.buttonIcon}>

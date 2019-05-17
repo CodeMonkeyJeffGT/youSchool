@@ -53,7 +53,7 @@ export default class ForumScreen extends React.Component {
             <View style={{marginTop: 20}}>
               <FlatList 
                 data={this.state.users}
-                keyExtractor={item => item.id + ''}
+                keyExtractor={item => 'followsUser' + item.id + ''}
                 renderItem={({item}) => 
                   <TouchableOpacity
                     style={styles.userContainer}

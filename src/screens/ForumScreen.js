@@ -120,13 +120,14 @@ export default class ForumScreen extends React.Component {
                     name={Platform.OS === 'ios' ? `ios-add` : 'md-add'}
                     size={50}
                     style={styles.plusIcon}
+                    color={Colors.tabIconSelected}
                   />
                 </TouchableOpacity>
               </View>
               <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
                 <FlatList 
                   data={this.state.columns}
-                  keyExtractor={item => item.id + ''}
+                  keyExtractor={item => 'forumColumns' + item.id + ''}
                   renderItem={({item}) => 
                     <TouchableOpacity onPress={this.columnDetail.bind(this, item.id)} style={styles.columnElement}>
                       <Text style={styles.columnName}>{item.name} {item.type}</Text>
@@ -147,38 +148,71 @@ export default class ForumScreen extends React.Component {
                 <View style={styles.welcomeContainer}>
                   <FlatList 
                     data={this.state.pages}
-                    keyExtractor={item => item.id + ''}
+                    keyExtractor={item => 'forumPages' + item.id + ''}
                     renderItem={({item}) => 
                       <View>
-                        <View style={styles.userPageContainer}>
-                          <View style={styles.userIconContainer}>
-                            <Image
-                              source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
-                              style={{ width: 64, height: 64, borderRadius: 50, }}
-                              resizeMode="cover"
+                        <TouchableOpacity onPress={() => this.pageDetail(item.id)}>
+                          <View style={styles.userPageContainer}>
+                            <View style={styles.userIconContainer}>
+                              <Image
+                                source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
+                                style={{ width: 64, height: 64, borderRadius: 50, }}
+                                resizeMode="cover"
+                              />
+                            </View>
+                            <View style={styles.titleTextContainer}>
+                              <Text style={styles.nameText} numberOfLines={1}>
+                                {item.user.nickname}
+                              </Text>
+                              <Text style={styles.slugText} numberOfLines={1}>
+                                {item.user.school.name}
+                              </Text>
+                              <Text style={styles.descriptionText}>
+                                {item.column.name} {item.column.type}
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.pageContainer}>
+                            <View style={styles.titleTextContainer}>
+                              <Text style={styles.nameText} numberOfLines={1}>
+                                {item.name}
+                              </Text>
+                              <Text style={styles.contentText} numberOfLines={10}>
+                                {item.content}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                        <View style={styles.buttonContainer}>
+                          <TouchableOpacity style={styles.buttonWidth} onPress={() => this.likeSwitch(item.id, item.isLike)}>
+                            <Icon.Ionicons
+                              name={(Platform.OS === 'ios' ? `ios-heart` : 'md-heart') + (item.isLike ? '' : '-empty')}
+                              style={styles.btnIcons}
+                              size={20}
+                              color={Colors.tabIconSelected}
                             />
-                          </View>
-                          <View style={styles.titleTextContainer}>
-                            <Text style={styles.nameText} numberOfLines={1}>
-                              {item.user.nickname}
-                            </Text>
-                            <Text style={styles.slugText} numberOfLines={1}>
-                              {item.user.school.name}
-                            </Text>
-                            <Text style={styles.descriptionText}>
-                              {item.column.name} {item.column.type}
-                            </Text>
-                          </View>
-                        </View>
-                        <View style={styles.pageContainer}>
-                          <View style={styles.titleTextContainer}>
-                            <Text style={styles.nameText} numberOfLines={1}>
-                              {item.name}
-                            </Text>
-                            <Text style={styles.contentText} numberOfLines={1}>
-                              {item.content}
-                            </Text>
-                          </View>
+                            <Text style={styles.btnText}>{item.likeNum}</Text>
+                          </TouchableOpacity>
+                          <View style={styles.axis}/>
+                          <TouchableOpacity style={styles.buttonWidth} onPress={() => this.pageDetail(item.id)}>
+                            <Icon.Ionicons
+                              name={Platform.OS === 'ios' ? `ios-text` : 'md-text'}
+                              style={styles.btnIcons}
+                              size={20}
+                              color={Colors.tabIconSelected}
+                            />
+                            <Text style={styles.btnText}>{item.commentNum}</Text>
+                          </TouchableOpacity>
+                          <View style={styles.axis}/>
+                          <TouchableOpacity style={styles.buttonWidth} onPress={() => this.collectSwitch(item.id, item.isCollect)}>
+                            <Icon.Ionicons
+                              name={(Platform.OS === 'ios' ? `ios-star` : 'md-star') + (item.isCollect ? '' : '-outline')}
+                              style={styles.btnIcons}
+                              size={20}
+                              color={Colors.tabIconSelected}
+                            />
+                            <Text style={styles.btnText}>{item.collectNum}</Text>
+                          </TouchableOpacity>
                         </View>
                       </View>
                     }
@@ -196,7 +230,7 @@ export default class ForumScreen extends React.Component {
                 <View style={styles.welcomeContainer}>
                   <FlatList 
                     data={this.state.users}
-                    keyExtractor={item => item.id + ''}
+                    keyExtractor={item => 'forumUsers' + item.id + ''}
                     renderItem={({item}) => 
                       <View style={styles.userContainer}>
                         <View style={styles.userIconContainer}>
@@ -233,38 +267,71 @@ export default class ForumScreen extends React.Component {
           <View style={styles.welcomeContainer}>
             <FlatList 
               data={this.state.lists}
-              keyExtractor={item => item.id + ''}
+              keyExtractor={item => 'forumLists' + item.id + ''}
               renderItem={({item}) => 
                 <View>
-                  <View style={styles.userPageContainer}>
-                    <View style={styles.userIconContainer}>
-                      <Image
-                        source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
-                        style={{ width: 64, height: 64, borderRadius: 50, }}
-                        resizeMode="cover"
+                  <TouchableOpacity onPress={() => this.pageDetail(item.id)}>
+                    <View style={styles.userPageContainer}>
+                      <View style={styles.userIconContainer}>
+                        <Image
+                          source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
+                          style={{ width: 64, height: 64, borderRadius: 50, }}
+                          resizeMode="cover"
+                        />
+                      </View>
+                      <View style={styles.titleTextContainer}>
+                        <Text style={styles.nameText} numberOfLines={1}>
+                          {item.user.nickname}
+                        </Text>
+                        <Text style={styles.slugText} numberOfLines={1}>
+                          {item.user.school.name}
+                        </Text>
+                        <Text style={styles.descriptionText}>
+                          {item.column.name} {item.column.type}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.pageContainer}>
+                      <View style={styles.titleTextContainer}>
+                        <Text style={styles.nameText} numberOfLines={1}>
+                          {item.name}
+                        </Text>
+                        <Text style={styles.contentText} numberOfLines={10}>
+                          {item.content}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.likeSwitch(item.id, item.isLike)}>
+                      <Icon.Ionicons
+                        name={(Platform.OS === 'ios' ? `ios-heart` : 'md-heart') + (item.isLike ? '' : '-empty')}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
                       />
-                    </View>
-                    <View style={styles.titleTextContainer}>
-                      <Text style={styles.nameText} numberOfLines={1}>
-                        {item.user.nickname}
-                      </Text>
-                      <Text style={styles.slugText} numberOfLines={1}>
-                        {item.user.school.name}
-                      </Text>
-                      <Text style={styles.descriptionText}>
-                        {item.column.name} {item.column.type}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.pageContainer}>
-                    <View style={styles.titleTextContainer}>
-                      <Text style={styles.nameText} numberOfLines={1}>
-                        {item.name}
-                      </Text>
-                      <Text style={styles.contentText} numberOfLines={1}>
-                        {item.content}
-                      </Text>
-                    </View>
+                      <Text style={styles.btnText}>{item.likeNum}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.axis}/>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.pageDetail(item.id)}>
+                      <Icon.Ionicons
+                        name={Platform.OS === 'ios' ? `ios-text` : 'md-text'}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
+                      />
+                      <Text style={styles.btnText}>{item.commentNum}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.axis}/>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.collectSwitch(item.id, item.isCollect)}>
+                      <Icon.Ionicons
+                        name={(Platform.OS === 'ios' ? `ios-star` : 'md-star') + (item.isCollect ? '' : '-outline')}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
+                      />
+                      <Text style={styles.btnText}>{item.collectNum}</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               }
@@ -275,8 +342,34 @@ export default class ForumScreen extends React.Component {
     );
   }
 
+  pageDetail = (id) => {
+    this._goto('Pages', {id: id});
+  }
+
   columnDetail = (id) => {
     this._goto('Columns', {id: id});
+  }
+
+  likeSwitch = (id, status) => {
+    let uri = status ? 'pageUnlike' : 'pageLike';
+    let msg = status ? '取消' : '';
+    this.sendAjax(uri, {pid: id}, {}, (rst) => {
+      this.searchPage(this.state.showSearchRstType == null);
+    }, (error) => {
+      console.log(error);
+      CommonAlert.alert('错误', msg + '点赞失败');
+    });
+  }
+
+  collectSwitch = (id, status) => {
+    let uri = status ? 'pageUncollect' : 'pageCollect';
+    let msg = status ? '取消' : '';
+    this.sendAjax(uri, {pid: id}, {}, (rst) => {
+      this.searchPage(this.state.showSearchRstType == null);
+    }, (error) => {
+      console.log(error);
+      CommonAlert.alert('错误', msg + '收藏失败');
+    });
   }
 
   checkSign = () => {
@@ -326,7 +419,6 @@ export default class ForumScreen extends React.Component {
         }
       }
     }, (error) => {
-      console.log(error);
       CommonAlert.alert('错误', '获取帖子列表失败');
     })
   }
@@ -387,9 +479,9 @@ export default class ForumScreen extends React.Component {
 
   ajaxReal = (uriName, replaces, datas, successFun, errorFun) => {
     let uri = Uri[uriName].uri;
-    replaces.forEach(key => {
+    for(var key in replaces) {
       uri = uri.replace('{' + key + '}', replaces[key]);
-    });
+    }
     Ajax.send(Uri[uriName].method, uri, datas)
     .then((rst) => {
       successFun(rst);
@@ -435,6 +527,14 @@ export default class ForumScreen extends React.Component {
       (error) => {
         Common.toSign(this);
         throw error;
+      }
+    );
+    this.props.navigation.addListener(
+      'willFocus',
+      payload => {
+        this.setState({
+          isLoadingComplete: false,
+        });
       }
     );
   }
@@ -567,9 +667,7 @@ const styles = StyleSheet.create({
     color: Colors.secondary,
   },
   rowArea: {
-    // flex: 1,
     flexDirection: 'row',
-    // backgroundColor: 'green',
   },
   searchInput: {
     marginTop: 5,
@@ -625,6 +723,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     marginLeft: 30,
     marginRight: 30,
+    paddingBottom: 100,
   },
   applyElement: {
     width: Dimensions.get('window').width- 60,
@@ -699,7 +798,6 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     flexDirection: 'row',
     backgroundColor: Colors.dividerColor,
-    marginBottom: 5,
   },
   userIconContainer: {
     marginRight: 15,
@@ -723,5 +821,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 6,
     color: '#4d4d4d',
+  },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 5,
+    flexDirection: 'row',
+    backgroundColor: Colors.dividerColor,
+    marginBottom: 5,
+  },
+  axis: {
+    borderLeftWidth: 1,
+    borderColor: Colors.accent,
+  },
+  buttonWidth: {
+    width: (Dimensions.get('window').width- 112) / 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btnIcons: {
+  },
+  btnText: {
+    marginLeft: 5,
+    color: Colors.tabIconSelected,
   },
 });

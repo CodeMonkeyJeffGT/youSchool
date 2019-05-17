@@ -47,7 +47,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.welcomeContainer}>
             <FlatList 
               data={this.state.menu1}
-              keyExtractor={item => item.id + ''}
+              keyExtractor={item => 'homeMenu1' + item.id + ''}
               renderItem={({item}) => 
                 <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
                   <Icon.Ionicons
@@ -61,7 +61,7 @@ export default class HomeScreen extends React.Component {
             />
             <FlatList 
               data={this.state.menu2}
-              keyExtractor={item => item.id + ''}
+              keyExtractor={item => 'homeMenu2' + item.id + ''}
               renderItem={({item}) => 
                 <TouchableOpacity onPress={this._goto.bind(this, item.route)} style={Object.assign({backgroundColor: item.bgColor}, styles.element)}>
                   <Icon.Ionicons
@@ -136,7 +136,7 @@ export default class HomeScreen extends React.Component {
             color: Colors.tabIconSelected,
           },
           {
-            id: 2,
+            id: 3,
             icon: Platform.OS === 'ios' ? `ios-cart` : 'md-cart',
             name: '二手交易',
             route: 'Exchange',
@@ -147,7 +147,7 @@ export default class HomeScreen extends React.Component {
         ],
         menu2: [
           {
-            id: 3,
+            id: 4,
             icon: Platform.OS === 'ios' ? `ios-paper` : 'md-paper',
             name: '考试',
             route: 'Exam',
@@ -156,7 +156,7 @@ export default class HomeScreen extends React.Component {
             color: Colors.tabIconSelected,
           },
           {
-            id: 4,
+            id: 5,
             icon: Platform.OS === 'ios' ? `ios-clipboard` : 'md-clipboard',
             name: '失物招领',
             route: 'Lost',

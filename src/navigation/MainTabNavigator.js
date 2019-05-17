@@ -45,6 +45,9 @@ const ForumStack = createStackNavigator({
 const MessageStack = createStackNavigator({
   Message: MessageScreen,
   MessageDetail: MessageDetailScreen,
+  Columns: ColumnsScreen,
+  Pages: PagesScreen,
+  Detail: DetailScreen,
 });
 
 const MesStack = createStackNavigator({
@@ -54,6 +57,9 @@ const MesStack = createStackNavigator({
   Followed: FollowedScreen,
   FollowColumns: FollowColumnsScreen,
   MyPages: MyPagesScreen,
+  Columns: ColumnsScreen, 
+  Pages: PagesScreen,
+  Detail: DetailScreen,
 });
 
 const IconsStack = createStackNavigator({

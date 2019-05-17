@@ -35,7 +35,7 @@ export default class extends React.Component {
     firstEdit: true,
     accAutoFocus: false,
     posting: false,
-    showSchools: false,
+    showSchools: true,
     schoolId: 0,
     schoolName: '请选择学校',
     account: '',
@@ -73,7 +73,7 @@ export default class extends React.Component {
               </TouchableOpacity>
               <FlatList 
                 data={this.state.schoolsList}
-                keyExtractor={item => item.id + ''}
+                keyExtractor={item => 'schoolsSign' + item.id + ''}
                 renderItem={({item}) => 
                   <TouchableOpacity onPress={this.chooseSchool.bind(this, item)} >
                     <Text style={styles.schoolElement}>{item.name}</Text>

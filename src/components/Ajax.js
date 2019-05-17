@@ -45,7 +45,6 @@ const defatltUri = '/';
 const send = (method = 'GET', uri = defatltUri, data = defaultData) => {
   if (method == 'GET') {
     uri = urlEncode(uri, data);
-    console.log(uri);
   }
   return new Promise(
     (resolve, reject) => {

@@ -2,13 +2,10 @@ import React from 'react';
 import {
   Dimensions,
   FlatList,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   Image,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -54,7 +51,7 @@ export default class ForumScreen extends React.Component {
             <View style={{marginTop: 20}}>
               <FlatList 
                 data={this.state.users}
-                keyExtractor={item => item.id + ''}
+                keyExtractor={item => 'followedUser' + item.id + ''}
                 renderItem={({item}) => 
                   <View style={styles.userContainer}>
                     <View style={styles.userIconContainer}>

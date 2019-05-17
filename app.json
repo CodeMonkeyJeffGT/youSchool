@@ -23,9 +23,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nefuer.you"
     },
     "description": "优享校园",
-    "githubUrl": "https://github.com/codemonkeyjeffgt/youschool"
+    "githubUrl": "https://github.com/codemonkeyjeffgt/youschool",
+    "android": {
+      "package": "com.nefuer.you"
+    }
   }
 }
