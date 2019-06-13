@@ -185,6 +185,29 @@ export default class CollectsScreen extends React.Component {
       );
     }
   }
+  _goto = (route, params = {}) => {
+    if ( ! this.state.isLogin) {
+      Common.checkSign()
+      .then(
+        (rst) => {
+          this.setState({ isLogin : true });
+          this.gotoReal(route, params);
+        }
+      )
+      .catch(
+        (error) => {
+          Common.toSign(this);
+          this.setState({ isLogin : false });
+          throw error;
+        }
+      );
+    }
+    this.gotoReal(route, params);
+  }
+  
+  gotoReal = (route, params = {}) => {
+    Common.toRoute(this, route, params);
+  }
 
   sendAjax = (uriName, replaces, datas, success, errorFun) => {
     if ( ! this.state.isLogin) {

@@ -131,7 +131,7 @@ const bottomTabNavigator = createBottomTabNavigator({
   ForumStack,
   MessageStack,
   MesStack,
-  IconsStack,
+  // IconsStack,
 });
 
 export default createStackNavigator(
