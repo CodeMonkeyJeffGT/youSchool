@@ -77,7 +77,7 @@ export default class LessonScreen extends React.Component {
               keyExtractor={item => 'lesson' + item.title + ''}
               renderItem={({item}) => 
                 <View
-                  style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10}}>
+                  style={{flexDirection: 'row'}}>
                   <Text numberOfLines={10} style={{height: 100, borderColor: 'gray', borderWidth: 1, textAlign: 'center', width: Dimensions.get('window').width / 11}}>{item.title}</Text>
                   <Text numberOfLines={10} style={{height: 100, borderColor: 'gray', borderWidth: 1, textAlign: 'center', width: Dimensions.get('window').width / 11}}>{item.lessons[0].name} {item.lessons[0].place}</Text>
                   <Text numberOfLines={10} style={{height: 100, borderColor: 'gray', borderWidth: 1, textAlign: 'center', width: Dimensions.get('window').width / 11}}>{item.lessons[1].name} {item.lessons[1].place}</Text>

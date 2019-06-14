@@ -3,7 +3,7 @@ import { ExpoConfigView } from '@expo/samples';
 
 export default class extends React.Component {
   static navigationOptions = {
-    title: '我',
+    title: '用户信息',
   };
 
   render() {

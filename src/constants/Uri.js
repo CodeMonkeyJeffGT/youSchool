@@ -85,6 +85,14 @@ export default {
     uri: baseUrl + '/api/v1/columnFollowNumbers/{id}',
     method: 'GET',
   },
+  minePage: {
+    uri: baseUrl + '/api/v1/userPages',
+    method: 'GET',
+  },
+  othersPage: {
+    uri: baseUrl + '/api/v1/userPages/{uid}',
+    method: 'GET',
+  },
   pageList: {
     uri: baseUrl + '/api/v1/pages',
     method: 'GET',

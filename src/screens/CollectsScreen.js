@@ -162,7 +162,10 @@ export default class CollectsScreen extends React.Component {
 
   collects() {
     this.sendAjax('pageCollectList', [], {}, (rst) => {
-      console.log(rst);
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].column.type = types[rst[key].column.type];
+      }
       this.setState({ pages: rst, isLoadingComplete: true });
     }, (error) => {
       CommonAlert.alert('错误', '获取收藏列表失败');

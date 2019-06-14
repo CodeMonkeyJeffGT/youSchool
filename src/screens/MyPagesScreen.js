@@ -168,6 +168,7 @@ export default class MyPagesScreen extends React.Component {
   collectSwitch = (id, status) => {
     let uri = status ? 'pageUncollect' : 'pageCollect';
     let msg = status ? '取消' : '';
+    console.log(uri);
     if (status) {
       Alert.alert('提示', '是否取消收藏？', [
         {text: '取消'},
@@ -180,16 +181,26 @@ export default class MyPagesScreen extends React.Component {
           });
         }},
       ])
+    } else {
+      this.sendAjax(uri, {pid: id}, {}, (rst) => {
+        this.myPages();
+      }, (error) => {
+        console.log(error);
+        CommonAlert.alert('错误', msg + '取消收藏失败');
+      });
     }
     
   }
 
   myPages() {
-    this.sendAjax('pageCollectList', [], {}, (rst) => {
-      console.log(rst);
+    this.sendAjax('minePage', [], {}, (rst) => {
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].column.type = types[rst[key].column.type];
+      }
       this.setState({ pages: rst, isLoadingComplete: true });
     }, (error) => {
-      CommonAlert.alert('错误', '获取收藏列表失败');
+      CommonAlert.alert('错误', '获取列表失败');
     });
   }
 
