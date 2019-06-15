@@ -57,10 +57,7 @@ export default class ForumScreen extends React.Component {
                 renderItem={({item}) => 
                   <TouchableOpacity
                     style={styles.userContainer}
-                    onPress={() => Alert.alert('提示', '是否要取消关注' + item.nickname + '?', [
-                      {text: '取消'},
-                      {text: '确认', onPress: () => this.unfollow(item.id)},
-                    ])}
+                    onPress={() => this.userInfo(item.id)}
                   >
                     <View style={styles.userIconContainer}>
                       <Image
@@ -87,12 +84,44 @@ export default class ForumScreen extends React.Component {
     );
   }
   
-  unfollow = (id) => {
-    this.sendAjax('userUnfollow', {id: id}, {}, (rst) => {
-      this.follows();
-    }, (error) => {
-      CommonAlert.alert('错误', '获取关注列表失败');
-    });
+  userInfo = (id) => {
+    this._goto('Detail', {id: id});
+  }
+
+  _goto = (route, params = {}) => {
+    if (route == '') {
+      return;
+    }
+    if ( ! this.state.isLogin) {
+      Common.checkSign()
+      .then(
+        (rst) => {
+          this.setState({ isLogin : true });
+          this.gotoReal(route, params);
+        }
+      )
+      .catch(
+        (error) => {
+          Common.toSign(this);
+          this.setState({ isLogin : false });
+          throw error;
+        }
+      );
+    }
+    this.gotoReal(route, params);
+  }
+  
+  gotoReal = (route, params = {}) => {
+    if (route == 'Sign') {
+      params = { closable: true }
+    } else if (route == 'SignOut') {
+      this.signOutUser();
+      return;
+    } else if (route == 'Info') {
+      this.setState({showEditInfo: true});
+      return;
+    }
+    Common.toRoute(this, route, params);
   }
 
   follows() {

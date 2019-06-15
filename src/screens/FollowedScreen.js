@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   View,
+  TouchableOpacity,
 } from 'react-native';
 
 import { AppLoading, Icon } from 'expo';
@@ -53,7 +54,10 @@ export default class ForumScreen extends React.Component {
                 data={this.state.users}
                 keyExtractor={item => 'followedUser' + item.id + ''}
                 renderItem={({item}) => 
-                  <View style={styles.userContainer}>
+                  <TouchableOpacity
+                    style={styles.userContainer}
+                    onPress={() => this.userInfo(item.id)}
+                  >
                     <View style={styles.userIconContainer}>
                       <Image
                         source={{ uri: item.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.headpic }}
@@ -69,7 +73,7 @@ export default class ForumScreen extends React.Component {
                         {item.school.name}
                       </Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 }
               />
             </View>
@@ -77,6 +81,46 @@ export default class ForumScreen extends React.Component {
         </ScrollView>
       </View>
     );
+  }
+  
+  userInfo = (id) => {
+    this._goto('Detail', {id: id});
+  }
+
+  _goto = (route, params = {}) => {
+    if (route == '') {
+      return;
+    }
+    if ( ! this.state.isLogin) {
+      Common.checkSign()
+      .then(
+        (rst) => {
+          this.setState({ isLogin : true });
+          this.gotoReal(route, params);
+        }
+      )
+      .catch(
+        (error) => {
+          Common.toSign(this);
+          this.setState({ isLogin : false });
+          throw error;
+        }
+      );
+    }
+    this.gotoReal(route, params);
+  }
+  
+  gotoReal = (route, params = {}) => {
+    if (route == 'Sign') {
+      params = { closable: true }
+    } else if (route == 'SignOut') {
+      this.signOutUser();
+      return;
+    } else if (route == 'Info') {
+      this.setState({showEditInfo: true});
+      return;
+    }
+    Common.toRoute(this, route, params);
   }
 
   follows() {

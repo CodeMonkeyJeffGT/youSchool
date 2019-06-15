@@ -227,12 +227,12 @@ export default class ForumScreen extends React.Component {
               <SearchArea small={true} father={this} />
               <ShowType type='users' father={this} />
               <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-                <View style={styles.welcomeContainer}>
+                <View style={styles.welcomeContainer} >
                   <FlatList 
                     data={this.state.users}
                     keyExtractor={item => 'forumUsers' + item.id + ''}
                     renderItem={({item}) => 
-                      <View style={styles.userContainer}>
+                      <TouchableOpacity style={styles.userContainer} onPress={() => this.userDetail(item.id)} >
                         <View style={styles.userIconContainer}>
                           <Image
                             source={{ uri: item.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.headpic }}
@@ -251,7 +251,7 @@ export default class ForumScreen extends React.Component {
                             {item.sign}
                           </Text>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     }
                   />
                 </View>
@@ -340,6 +340,10 @@ export default class ForumScreen extends React.Component {
         </ScrollView>
       </View>
     );
+  }
+
+  userDetail = (id) => {
+    this._goto('Detail', {id: id});
   }
 
   pageDetail = (id) => {
@@ -837,8 +841,6 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width- 112) / 3,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  btnIcons: {
   },
   btnText: {
     marginLeft: 5,
