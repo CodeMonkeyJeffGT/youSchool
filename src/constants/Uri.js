@@ -93,6 +93,10 @@ export default {
     uri: baseUrl + '/api/v1/userPages/{uid}',
     method: 'GET',
   },
+  pageInfo: {
+    uri: baseUrl + '/api/v1/pages/{id}',
+    method: 'GET',
+  },
   pageList: {
     uri: baseUrl + '/api/v1/pages',
     method: 'GET',

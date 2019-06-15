@@ -47,41 +47,25 @@ export default class FollowColumnsScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <View style={{marginTop: 20}}>
-              <FlatList 
-                data={this.state.users}
-                keyExtractor={item => 'followeColumns' + item.id + ''}
-                renderItem={({item}) => 
-                  <View style={styles.userContainer}>
-                    <View style={styles.userIconContainer}>
-                      <Image
-                        source={{ uri: item.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.headpic }}
-                        style={{ width: 40, height: 40, borderRadius: 50, }}
-                        resizeMode="cover"
-                      />
-                    </View>
-                    <View style={styles.titleTextContainer}>
-                      <Text style={styles.nameText} numberOfLines={1}>
-                        {item.nickname}
-                      </Text>
-                      <Text style={styles.slugText} numberOfLines={1}>
-                        {item.school.name}
-                      </Text>
-                    </View>
-                  </View>
-                }
-              />
-            </View>
-          </View>
+          <FlatList 
+            data={this.state.columns}
+            keyExtractor={item => 'forumColumns' + item.id + ''}
+            renderItem={({item}) => 
+              <TouchableOpacity onPress={this.columnDetail.bind(this, item.id)} style={styles.columnElement}>
+                <Text style={styles.columnName}>{item.name} {item.type}</Text>
+                <Text style={styles.columnDesc}>{item.description}</Text>
+                <Text style={styles.columnLike}>关注：{item.followNum}人</Text>
+              </TouchableOpacity>
+            }
+          />
         </ScrollView>
       </View>
     );
   }
 
   follows() {
-    this.sendAjax('userFollowList', [], {}, (rst) => {
-      this.setState({ users: rst.followed, isLoadingComplete: true });
+    this.sendAjax('columnFollowList', [], {}, (rst) => {
+      this.setState({ columns: rst.followed, isLoadingComplete: true });
     }, (error) => {
       CommonAlert.alert('错误', '获取关注列表失败');
     });

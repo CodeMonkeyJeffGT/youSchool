@@ -97,6 +97,18 @@ export default class HomeScreen extends React.Component {
         }
       );
     }
+    switch (route) {
+      case 'Exchange':
+        route = 'Columns';
+        params = {sp: 'exchange'};
+        break;
+      case 'Lost':
+          route = 'Columns';
+          params = {sp: 'lost'};
+        break;
+      default:
+        break;
+    }
     this.gotoReal(route, params);
   }
   
