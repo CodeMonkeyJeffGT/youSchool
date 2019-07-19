@@ -50,89 +50,79 @@ export default class MyPagesScreen extends React.Component {
         />
       );
     }
+    if (this.state.publish) {
+      return (
+        <View style={styles.welcomeContainer}>
+          <View style={styles.signElement}>
+            <Text sytle={styles.signLabel}>
+              标题
+            </Text>
+            <TextInput
+              style={styles.signInput} 
+              value={this.state.publishTitle}
+              onChangeText={(text) => this.setState({ publishTitle: text })}
+            />
+          </View>
+          <View style={styles.signElement}>
+            <Text sytle={styles.signLabel}>
+              内容
+            </Text>
+            <TextInput
+              style={styles.signInput} 
+              value={this.state.publishContent}
+              onChangeText={(text) => this.setState({ publishContent: text })}
+              multiline={true}
+            />
+          </View>
+          <View style={styles.signElement}>
+            <TouchableOpacity
+              onPress={this.publish}
+            >
+              <Text style={styles.signButton}>发布</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signElement}>
+            <TouchableOpacity
+              onPress={() => this.setState({publish: false})}
+            >
+              <Text style={styles.signButton}>取消</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
-            <View>
-              <View style={styles.userPageContainer}>
-                <View style={styles.userIconContainer}>
-                  <Image
-                    source={{ uri: this.state.page.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + this.state.page.user.headpic }}
-                    style={{ width: 64, height: 64, borderRadius: 50, }}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={styles.titleTextContainer}>
-                  <Text style={styles.nameText} numberOfLines={1}>
-                    {this.state.page.user.nickname}
-                  </Text>
-                  <Text style={styles.slugText} numberOfLines={1}>
-                    {this.state.page.user.school.name}
-                  </Text>
-                  <Text style={styles.descriptionText}>
-                    {this.state.page.column.name} {this.state.page.column.type}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.pageContainer}>
-                <View style={styles.titleTextContainer}>
-                  <Text style={styles.nameText} numberOfLines={1}>
-                    {this.state.page.name}
-                  </Text>
-                  <Text style={styles.contentText} numberOfLines={1}>
-                    {this.state.page.content}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonWidth} onPress={() => this.likeSwitch(this.state.page.id, this.state.page.isLike)}>
-                  <Icon.Ionicons
-                    name={(Platform.OS === 'ios' ? `ios-heart` : 'md-heart') + (this.state.page.isLike ? '' : '-empty')}
-                    style={styles.btnIcons}
-                    size={20}
-                    color={Colors.tabIconSelected}
-                  />
-                  <Text style={styles.btnText}>{this.state.page.likeNum}</Text>
-                </TouchableOpacity>
-                <View style={styles.axis}/>
-                <TouchableOpacity style={styles.buttonWidth} onPress={() => this.collectSwitch(this.state.page.id, this.state.page.isCollect)}>
-                  <Icon.Ionicons
-                    name={(Platform.OS === 'ios' ? `ios-star` : 'md-star') + (this.state.page.isCollect ? '' : '-outline')}
-                    style={styles.btnIcons}
-                    size={20}
-                    color={Colors.tabIconSelected}
-                  />
-                  <Text style={styles.btnText}>{this.state.page.collectNum}</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.columnElement}>
+              <Text style={styles.columnName}>{this.state.column.name} {this.state.column.type}</Text>
+              <Text style={styles.columnDesc}>{this.state.column.description}</Text>
+              <Text style={styles.columnLike}>关注：{this.state.column.followNum}人</Text>
             </View>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end', paddingBottom: 10}}>
-              <TextInput
-                style={styles.commentInput}
-                value={this.state.comment}
-                onChangeText={(text) => this.setState({ comment: text })}
-                placeholder='评论'
-                multiline={true}
-              />
-              <TouchableOpacity
-                onPress={this.comment}
-              >
-                <Text style={styles.commentButton}>评论</Text>
-              </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.switchFollow()}>
+                      <Text style={{backgroundColor: Colors.lightPrimary, paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, borderRadius: 50, marginBottom: 10}}>{this.state.followBtnStr}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.setState({publish: true})}>
+                      <Text style={{backgroundColor: Colors.lightPrimary, paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, borderRadius: 50, marginBottom: 10}}>发帖</Text>
+                    </TouchableOpacity>
             </View>
             <View>
-              <FlatList
-                style={{}}
-                data={this.state.comments}
-                keyExtractor={item => 'pageDetail' + item.id + ''}
-                renderItem={({item}) =>
-                  <View style={{marginTop: 5}}>
+              <ShowTerms terms={[{name: '学习交流'}, {name: '寝室生活'}, {name: '资源分享'}, {name: '失物招领'}, {name: '二手交易'}, {name: '闲聊区'}]} name={this.state.showTermName} father={this}/>
+            </View>
+            <Text>{this.showTermName}</Text>
+            <FlatList 
+              data={this.state.pages}
+              keyExtractor={item => 'forumLists' + item.id + ''}
+              renderItem={({item}) => 
+                <View>
+                  <TouchableOpacity onPress={() => this.pageDetail(item.id)}>
                     <View style={styles.userPageContainer}>
                       <View style={styles.userIconContainer}>
                         <Image
                           source={{ uri: item.user.headpic == '' ? 'http://you.nefuer.net/imgs/default.png' : 'http://you.nefuer.net' + item.user.headpic }}
-                          style={{ width: 40, height: 40, borderRadius: 50, }}
+                          style={{ width: 64, height: 64, borderRadius: 50, }}
                           resizeMode="cover"
                         />
                       </View>
@@ -143,27 +133,103 @@ export default class MyPagesScreen extends React.Component {
                         <Text style={styles.slugText} numberOfLines={1}>
                           {item.user.school.name}
                         </Text>
+                        <Text style={styles.descriptionText}>
+                          {item.column.name} {item.column.type}
+                        </Text>
                       </View>
                     </View>
                     <View style={styles.pageContainer}>
                       <View style={styles.titleTextContainer}>
+                        <Text style={styles.nameText} numberOfLines={1}>
+                          {item.name}
+                        </Text>
                         <Text style={styles.contentText} numberOfLines={10}>
                           {item.content}
                         </Text>
                       </View>
                     </View>
+                  </TouchableOpacity>
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.likeSwitch(item.id, item.isLike)}>
+                      <Icon.Ionicons
+                        name={(Platform.OS === 'ios' ? `ios-heart` : 'md-heart') + (item.isLike ? '' : '-empty')}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
+                      />
+                      <Text style={styles.btnText}>{item.likeNum}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.axis}/>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.pageDetail(item.id)}>
+                      <Icon.Ionicons
+                        name={Platform.OS === 'ios' ? `ios-text` : 'md-text'}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
+                      />
+                      <Text style={styles.btnText}>{item.commentNum}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.axis}/>
+                    <TouchableOpacity style={styles.buttonWidth} onPress={() => this.collectSwitch(item.id, item.isCollect)}>
+                      <Icon.Ionicons
+                        name={(Platform.OS === 'ios' ? `ios-star` : 'md-star') + (item.isCollect ? '' : '-outline')}
+                        style={styles.btnIcons}
+                        size={20}
+                        color={Colors.tabIconSelected}
+                      />
+                      <Text style={styles.btnText}>{item.collectNum}</Text>
+                    </TouchableOpacity>
                   </View>
-                }
-              />
-            </View>
+                </View>
+              }
+            />
           </View>
         </ScrollView>
       </View>
     );
   }
 
+  switchFollow = () => {
+    uri = (this.state.followBtnStr == '关注') ? 'columnFollow' : 'columnUnfollow';
+    this.sendAjax(uri, {id: this.state.id}, {}, (rst) => {
+      this.column();
+    }, (error) => {
+      console.log(error);
+      CommonAlert.alert('错误', msg + '操作失败');
+    });
+  }
+
+  publish = () => {
+    let title = this.state.publishTitle;
+    let content = this.state.publishContent;
+    if (title == '' || content == '') {
+      return;
+    }
+    let data = {
+      name: title,
+      content: content,
+    };
+    let id = this.state.id;
+    data.columnId = id;
+    let cid = this.state.cid;
+    if (cid) {
+      data.classId = cid;
+    }
+    this.sendAjax('pagePublish', {}, data, (rst) => {
+      this.setState({publishContent: '', publishTitle: '', publish: false});
+      this.column();
+    }, (error) => {
+      console.log(error);
+      CommonAlert.alert('错误', msg + '点赞失败');
+    });
+  }
+
   userDetail = (id) => {
     this._goto('Detail', {id: id});
+  }
+
+  pageDetail = (id) => {
+    this._goto('Pages', {id: id});
   }
   
   _goto = (route, params = {}) => {
@@ -190,25 +256,12 @@ export default class MyPagesScreen extends React.Component {
     Common.toRoute(this, route, params);
   }
 
-  comment = () => {
-    let comment = this.state.comment;
-    const pid = this.props.navigation.getParam('id');
-    console.log(pid);
-    if ('' != comment) {
-      this.sendAjax('pageComment', {pid: pid}, {content: comment}, (rst) => {
-        this.pageDetail();
-      }, (error) => {
-        console.log(error);
-        CommonAlert.alert('错误', msg + '评论失败');
-      })
-    }
-  }
 
   likeSwitch = (id, status) => {
     let uri = status ? 'pageUnlike' : 'pageLike';
     let msg = status ? '取消' : '';
     this.sendAjax(uri, {pid: id}, {}, (rst) => {
-      this.pageDetail();
+      this.column();
     }, (error) => {
       console.log(error);
       CommonAlert.alert('错误', msg + '点赞失败');
@@ -223,7 +276,7 @@ export default class MyPagesScreen extends React.Component {
         {text: '取消'},
         {text: '确认', onPress: () => {
           this.sendAjax(uri, {pid: id}, {}, (rst) => {
-            this.pageDetail();
+            this.column();
           }, (error) => {
             console.log(error);
             CommonAlert.alert('错误', msg + '收藏失败');
@@ -232,7 +285,7 @@ export default class MyPagesScreen extends React.Component {
       ])
     } else {
       this.sendAjax(uri, {pid: id}, {}, (rst) => {
-        this.pageDetail();
+        this.column();
       }, (error) => {
         console.log(error);
         CommonAlert.alert('错误', msg + '取消收藏失败');
@@ -241,25 +294,36 @@ export default class MyPagesScreen extends React.Component {
     
   }
 
-  pageDetail = () => {
-    const id = this.props.navigation.getParam('id');
-    let done = this.state.isLoadingComplete;
-    this.sendAjax('pageInfo', {id: id}, {}, (rst) => {
+  column = () => {
+    let data = {};
+    let id = this.state.id;
+    data.id = id;
+    let cid = this.state.cid;
+    if (cid) {
+      data.cid = cid;
+    }
+    data.sp = this.state.sp;
+    let cdone = this.state.isLoadingComplete;
+    let ldone = this.state.isLoadingComplete;
+    this.sendAjax('columnInfo', {id: id}, {}, (rst) => {
       let types = ['[学校V]', '[热门V]', ''];
-      rst.column.type = types[rst.column.type];
-      this.setState({ page: rst, isLoadingComplete: done });
-      done = true;
+      rst.type = types[rst.type];
+      cdone = true;
+      this.setState({ followBtnStr: (rst.isFollowed ? '已关注' : '关注'), sp: '', column: rst, isLoadingComplete: cdone && ldone });
     }, (error) => {
       console.log(error);
-      CommonAlert.alert('错误', msg + '获取帖子详情失败');
+      CommonAlert.alert('错误', msg + '获取版块详情失败');
     });
-    this.sendAjax('pageCommentList', {pid: id}, {}, (rst) => {
-      console.log(rst);
-      this.setState({ comments: rst, isLoadingComplete: done });
-      done = true;
+    this.sendAjax('pageList', {}, data, (rst) => {
+      ldone = true;
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].column.type = types[rst[key].column.type];
+      }
+      this.setState({ pages: rst, isLoadingComplete: cdone && ldone });
     }, (error) => {
       console.log(error);
-      CommonAlert.alert('错误', msg + '获取帖子详情失败');
+      CommonAlert.alert('错误', msg + '获取帖子列表失败');
     });
   }
 
@@ -328,8 +392,13 @@ export default class MyPagesScreen extends React.Component {
     Common.checkSign()
     .then(
       (rst) => {
-        this.setState({ isLogin : true });
-        this.pageDetail();
+        this.setState({
+          isLogin : true,
+          id: this.props.navigation.getParam('id'),
+          cid: this.props.navigation.getParam('cid'),
+          sp: this.props.navigation.getParam('sp'),
+        });
+        this.column();
       }
     )
     .catch(
@@ -347,6 +416,31 @@ export default class MyPagesScreen extends React.Component {
   _handleFinishLoading = () => {
 
   };
+}
+
+class ShowTerms extends React.Component {
+
+  render() {
+    let data = this.props.terms;
+    return (
+      <View>
+        <FlatList 
+          style={styles.showTerms}
+          data={data}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.name}
+          renderItem={({item}) => 
+            <TouchableOpacity onPress={() => {
+              this.props.father.setState({ showTermName: item.name })
+            }}>
+              <Text style={styles.unselected}>{item.name}</Text>
+            </TouchableOpacity>
+          }
+        />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -567,7 +661,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.accent,
   },
   buttonWidth: {
-    width: (Dimensions.get('window').width- 111) / 2,
+    width: (Dimensions.get('window').width- 112) / 3,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -576,5 +670,35 @@ const styles = StyleSheet.create({
   btnText: {
     marginLeft: 5,
     color: Colors.tabIconSelected,
+  },
+  signElement: {
+    width: Dimensions.get('window').width- 60,
+    marginBottom: 30,
+  },
+  signLabel: {
+    fontSize: 25,
+    marginBottom: 5,
+  },
+  signInput: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 3,
+  },
+  signButton: {
+    fontSize: 25,
+    padding: 5,
+    textAlign: 'center',
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 3,
+  },
+  showTerms: {
+    marginTop: 3,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ededed',
+    width: Dimensions.get('window').width - 80,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
 });

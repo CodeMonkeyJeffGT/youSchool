@@ -51,6 +51,30 @@ export default class extends React.Component {
         'id': 2,
         'name': '示例大学',
       },
+      {
+        'id': 3,
+        'name': '北京大学',
+      },
+      {
+        'id': 4,
+        'name': '清华大学',
+      },
+      {
+        'id': 5,
+        'name': '哈尔滨理工大学',
+      },
+      {
+        'id': 6,
+        'name': '哈尔滨工业大学',
+      },
+      {
+        'id': 7,
+        'name': '哈尔滨工程大学',
+      },
+      {
+        'id': 8,
+        'name': '西北农林科技大学',
+      },
     ],
   }
 

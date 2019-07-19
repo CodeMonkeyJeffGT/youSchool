@@ -73,7 +73,7 @@ export default {
     uri: baseUrl + '/api/v1/columnFollows/{id}',
     method: 'POST',
   },
-  columnUnollow: {
+  columnUnfollow: {
     uri: baseUrl + '/api/v1/columnFollows/{id}',
     method: 'DELETE',
   },
@@ -161,8 +161,12 @@ export default {
     uri: baseUrl + '/api/v1/messages',
     method: 'GET',
   },
+  messageDetail: {
+    uri: baseUrl + '/api/v1/messages/{id}',
+    method: 'GET',
+  },
   messageSend: {
-    uri: baseUrl + '/api/v1/messages',
+    uri: baseUrl + '/api/v1/messages/{id}',
     method: 'POST',
   },
   menu: {

@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   View,
+  TouchableOpacity,
 } from 'react-native';
 
 import { AppLoading, Icon } from 'expo';
@@ -65,7 +66,11 @@ export default class FollowColumnsScreen extends React.Component {
 
   follows() {
     this.sendAjax('columnFollowList', [], {}, (rst) => {
-      this.setState({ columns: rst.followed, isLoadingComplete: true });
+      let types = ['[学校V]', '[热门V]', ''];
+      for(var key in rst) {
+        rst[key].type = types[rst[key].type];
+      }
+      this.setState({ columns: rst, isLoadingComplete: true });
     }, (error) => {
       CommonAlert.alert('错误', '获取关注列表失败');
     });
@@ -86,6 +91,34 @@ export default class FollowColumnsScreen extends React.Component {
         }
       );
     }
+  }
+
+  columnDetail = (id) => {
+    this._goto('Columns', {id: id});
+  }
+
+  _goto = (route, params = {}) => {
+    if ( ! this.state.isLogin) {
+      Common.checkSign()
+      .then(
+        (rst) => {
+          this.setState({ isLogin : true });
+          this.gotoReal(route, params);
+        }
+      )
+      .catch(
+        (error) => {
+          Common.toSign(this);
+          this.setState({ isLogin : false });
+          throw error;
+        }
+      );
+    }
+    this.gotoReal(route, params);
+  }
+  
+  gotoReal = (route, params = {}) => {
+    Common.toRoute(this, route, params);
   }
 
   sendAjax = (uriName, replaces, datas, success, errorFun) => {
@@ -232,5 +265,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 6,
     color: '#4d4d4d',
+  },
+  columnElement: {
+    padding: 5,
+  },
+  columnName: {
+    fontSize: 20,
+  },
+  columnDesc: {
+    fontSize: 10,
+  },
+  columnLike: {
+    fontSize: 12,
+    textAlign: 'right',
   },
 });
